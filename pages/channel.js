@@ -1,5 +1,8 @@
 import 'isomorphic-fetch';
 import Layout from '../components/Layout';
+import ChannelGrid from '../components/ChannelGrid';
+import PodcastList from '../components/PodcastList';
+
 import Link from 'next/link';
 
 export default class extends React.Component{
@@ -33,30 +36,12 @@ export default class extends React.Component{
                 { series.length > 0 &&
                 <div>
                     <h2>Series</h2>
-                    <div className="channels">
-                        { series.map((serie) => (
-                        <Link key={serie.id} href={`/channel?id=${ serie.id }`} prefetch>
-                            <a className="channel">
-                            <img src={ serie.urls.logo_image.original } alt=""/>
-                            <h2>{ serie.title }</h2>
-                            </a>
-                        </Link>
-                        ))}
-                    </div>
+                    <ChannelGrid channels={series} />
                 </div>
                 }
 
                 <h2>Ultimos Podcasts</h2>
-                { audioClips.map((clip) => (
-                    <Link href={`/podcast?id=${clip.id}`} prefetch key={clip.id}>
-                    <a className='podcast'>
-                        <h3>{ clip.title }</h3>
-                        <div className='meta'>
-                        { Math.ceil(clip.duration / 60) } minutes
-                        </div>
-                    </a>
-                    </Link>
-                ))}
+                <PodcastList podcasts={audioClips} />
 
                 <style jsx>{`
                 header {
