@@ -6,6 +6,13 @@ import Error from './_error';
 
 export default class extends React.Component{
 
+    constructor(props){
+        super(props);
+        this.state = {
+            openPodcast: null
+        }
+    }
+
     static async getInitialProps({ query, res }){
         try {
             let [reqChannel, reqSeries, reqAudios] = await Promise.all([
@@ -35,8 +42,16 @@ export default class extends React.Component{
         }
     }
 
+    openPodcast = (event, podcast) =>{
+        event.preventDefault();
+        this.setState({
+            openPodcast: podcast
+        }, ()=> console.log(this.state));
+    }
+
     render(){
         const { channel, audioClips, series, statusCode } = this.props;
+        const { openPodcast } = this.state;
 
         //early return
         if(statusCode !== 200 ){
@@ -45,6 +60,11 @@ export default class extends React.Component{
 
         return(
             <Layout title={channel.title}>
+                
+                <div className="banner" style={{ backgroundImage: `url(${channel.urls.banner_image.original})` }} />
+
+                {openPodcast && <div>Podscast</div>}
+
                 <h1>{channel.title}</h1>
 
                 { series.length > 0 &&
@@ -55,7 +75,8 @@ export default class extends React.Component{
                 }
 
                 <h2>Ultimos Podcasts</h2>
-                <PodcastList podcasts={audioClips} />
+                <PodcastList onClickPodcast={this.openPodcast} 
+                             podcasts={audioClips} />
 
                 <style jsx>{`
                 header {
