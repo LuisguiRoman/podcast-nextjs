@@ -3,6 +3,7 @@ import Layout from '../components/Layout';
 import ChannelGrid from '../components/ChannelGrid';
 import PodcastList from '../components/PodcastList';
 import Error from './_error';
+import PodcastPlayer from '../components/PodcastPlayer';
 
 export default class extends React.Component{
 
@@ -46,7 +47,12 @@ export default class extends React.Component{
         event.preventDefault();
         this.setState({
             openPodcast: podcast
-        }, ()=> console.log(this.state));
+        });
+    }
+
+    closePodcast = (event) =>{
+        event.preventDefault();
+        this.setState({openPodcast: null});
     }
 
     render(){
@@ -63,7 +69,12 @@ export default class extends React.Component{
                 
                 <div className="banner" style={{ backgroundImage: `url(${channel.urls.banner_image.original})` }} />
 
-                {openPodcast && <div>Podscast</div>}
+                {openPodcast && (
+                    <div className="modal">
+                        <PodcastPlayer clip={openPodcast} 
+                                onClose={this.closePodcast} />
+                    </div>
+                )}
 
                 <h1>{channel.title}</h1>
 
@@ -79,13 +90,6 @@ export default class extends React.Component{
                              podcasts={audioClips} />
 
                 <style jsx>{`
-                header {
-                    color: #fff;
-                    background: #8756ca;
-                    padding: 15px;
-                    text-align: center;
-                }
-
                 .banner {
                     width: 100%;
                     padding-bottom: 25%;
@@ -141,6 +145,15 @@ export default class extends React.Component{
                     color: #666;
                     margin-top: 0.5em;
                     font-size: 0.8em;
+                }
+
+                .modal {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    z-index: 99999;
                 }
             `}</style>
             </Layout>
